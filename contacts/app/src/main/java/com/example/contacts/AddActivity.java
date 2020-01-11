@@ -27,13 +27,7 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
 
         Button confirmBtn = findViewById(R.id.confirm);
-
-        confirmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveContact();
-            }
-        });
+        confirmBtn.setOnClickListener(v -> saveContact());
     }
 
     @Override
@@ -43,11 +37,11 @@ public class AddActivity extends AppCompatActivity {
     }
 
     private void saveContact() {
-        String surname = ((EditText) findViewById(R.id.editText2)).getText().toString().trim();
-        String name = ((EditText) findViewById(R.id.editText3)).getText().toString().trim();
-        String otchestvo = ((EditText) findViewById(R.id.editText4)).getText().toString().trim();
-        String tel = ((EditText) findViewById(R.id.editText5)).getText().toString().trim();
-        String email = ((EditText) findViewById(R.id.editText6)).getText().toString().trim();
+        String surname = ((EditText) findViewById(R.id.editText2)).getText().toString();
+        String name = ((EditText) findViewById(R.id.editText3)).getText().toString();
+        String otchestvo = ((EditText) findViewById(R.id.editText4)).getText().toString();
+        String tel = ((EditText) findViewById(R.id.editText5)).getText().toString();
+        String email = ((EditText) findViewById(R.id.editText6)).getText().toString();
 
         if (surname.equals("") || name.equals("") || otchestvo.equals("") || tel.equals("") || email.equals("")) {
             Toast.makeText(this, "Заполните все поля", Toast.LENGTH_LONG).show();
@@ -57,17 +51,10 @@ public class AddActivity extends AppCompatActivity {
         ContactsDatabase db = ContactsDatabase.getInstance(this);
         ContactDao dao = db.conactsDao();
 
-        compositeDisposable.add(dao.insert(new Contact(name, surname, otchestvo, tel, email))
+        compositeDisposable.add(dao.insert(new Contact(null, name, surname, otchestvo, tel, email))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action() {
-                            @Override
-                            public void run() {
-                                finish();
-                            }
-                        }
-                )
+                .subscribe(this::finish)
         );
     }
 }

@@ -55,12 +55,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
         public void bind(final AdapterContact contact) {
             ((TextView) view.findViewById(R.id.fullname_textview)).setText(contact.fullName);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onClick(contact.id);
-                }
-            });
+            view.setOnClickListener(v -> listener.onClick(contact.id));
         }
     }
 }

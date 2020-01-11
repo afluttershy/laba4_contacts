@@ -35,13 +35,9 @@ public class MainActivity extends AppCompatActivity implements OnContactClickLis
         setContentView(R.layout.activity_main);
 
         Button addBtn = findViewById(R.id.button);
-
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), AddActivity.class);
-                startActivity(i);
-            }
+        addBtn.setOnClickListener(view -> {
+            Intent i = new Intent(MainActivity.this, AddActivity.class);
+            startActivity(i);
         });
 
         initAdapter();
@@ -69,27 +65,17 @@ public class MainActivity extends AppCompatActivity implements OnContactClickLis
         compositeDisposable.add(dao.observeAll()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<List<Contact>, Object>() {
-                    @Override
-                    public Object apply(List<Contact> contacts) {
-                        List<AdapterContact> adapterContacts = new ArrayList<>();
-                        for (Contact contact : contacts) {
-                            adapterContacts.add(new AdapterContact(
-                                    contact.id,
-                                    contact.surname + " " + contact.name + " " + contact.patronymic
-                            ));
-                        }
-                        return adapterContacts;
+                .map(contacts -> {
+                    List<AdapterContact> adapterContacts = new ArrayList<>();
+                    for (Contact contact : contacts) {
+                        adapterContacts.add(new AdapterContact(
+                                contact.id,
+                                contact.surname + " " + contact.name + " " + contact.patronymic
+                        ));
                     }
+                    return adapterContacts;
                 })
-                .subscribe(
-                        new Consumer<Object>() {
-                            @Override
-                            public void accept(Object contacts) {
-                                addContacts((List<AdapterContact>) contacts);
-                            }
-                        }
-                ));
+                .subscribe(this::addContacts));
     }
 
     private void addContacts(List<AdapterContact> contacts) {
@@ -99,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements OnContactClickLis
 
     @Override
     public void onClick(Long contactId) {
-
+        Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra(ProfileActivity.CONTACT_ID, (long) contactId);
+        startActivity(i);
     }
 }

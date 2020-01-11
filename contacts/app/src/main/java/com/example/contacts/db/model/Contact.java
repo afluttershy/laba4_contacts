@@ -21,7 +21,8 @@ public class Contact {
     @ColumnInfo(name = "email")
     public String email;
 
-    public Contact(String name, String surname, String patronymic, String phone, String email) {
+    public Contact(Long id, String name, String surname, String patronymic, String phone, String email) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.patronymic = patronymic;
